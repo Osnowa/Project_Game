@@ -10,7 +10,7 @@ class Hero():
         self.images = pygame.image.load('images/hero.png')
         self.rect = self.images.get_rect()
         self.screen_rect = screen.get_rect()
-        # Каждый новый корабль появляется у нижнего края экрана
+        # Каждый новый корабль появляется у нижнего края экрана по центру
         self.rect.centerx = self.screen_rect.centerx
         self.rect.bottom = self.screen_rect.bottom
 
