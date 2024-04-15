@@ -3,6 +3,7 @@ from pygame.sprite import Group
 import sys #для завершения игры
 from settings import Settings
 from ship import Ship
+from alien import Alien
 from hero import Hero
 import game_functions as gf
 
@@ -16,14 +17,18 @@ def run_game():
 
     ship = Ship(ai_settings ,screen) # создание корабля
     bullets = Group() # для хранения пуль
+    aliens = Group()
     hero = Hero(screen) # создание hero
+    alien = Alien(ai_settings, screen) # Создание пришельца
+
+    gf.create_fleet(ai_settings, screen, ship, aliens) # Создание флота пришельцев
 
     # Запуск цикла игры
     while True:
         #Отслеживание ввода
         gf.check_events(ai_settings, screen, ship, bullets)
         ship.update()
-        bullets.update()
-        gf.update_screen(ai_settings, screen, ship, bullets)
+        gf.update_bullets(bullets )
+        gf.update_screen(ai_settings, screen, ship, aliens, bullets)
 
 run_game()
