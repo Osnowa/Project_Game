@@ -3,7 +3,7 @@ from bullet import Bullet
 from alien import Alien
 from time import sleep
 
-def check_events(ai_settings, screen, stats, play_button, ship, aliens, bullets):
+def check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets):
     """Обработка нажатия клваиш и события мыши."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -15,9 +15,9 @@ def check_events(ai_settings, screen, stats, play_button, ship, aliens, bullets)
             check_keyup_events(event, ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_play_button(ai_settings, screen, stats, play_button, ship, aliens, bullets, mouse_x, mouse_y)
+            check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets, mouse_x, mouse_y)
 
-def check_play_button(ai_settings, screen, stats, play_button, ship, aliens, bullets, mouse_x, mouse_y):
+def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets, mouse_x, mouse_y):
     """Запускает новую игру при нажатии кнопки play"""
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked and not stats.game_active:
@@ -27,6 +27,10 @@ def check_play_button(ai_settings, screen, stats, play_button, ship, aliens, bul
         # сброс игровой статистики
         stats.reset_stats()
         stats.game_active = True
+        # Сброс изображений счетов уровня
+        sb.prep_score()
+        sb.prep_high_score()
+        sb.prep_level()
         # Очистка списков пришельцев и пуль.
         aliens.empty()
         bullets.empty()
@@ -93,6 +97,8 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens, 
         # Уничтожение пуль, повышение скорости и создание нового флота
         bullets.empty()
         ai_settings.increase_speed()
+        stats.level += 1
+        sb.prep_level()
         create_fleet(ai_settings, screen, ship, aliens)
 
 def fire_bullet(ai_settings, screen, ship, bullets):
