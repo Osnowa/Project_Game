@@ -2,6 +2,7 @@ import pygame
 from pygame.sprite import Group
 import sys #для завершения игры
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 from alien import Alien
 from hero import Hero
@@ -23,13 +24,16 @@ def run_game():
 
     gf.create_fleet(ai_settings, screen, ship, aliens) # Создание флота пришельцев
 
+    # Создание экземпляра для хранения игровой статистики.
+    stats = GameStats(ai_settings)
+
     # Запуск цикла игры
     while True:
         #Отслеживание ввода
         gf.check_events(ai_settings, screen, ship, bullets)
         ship.update()
-        gf.update_bullets(aliens, bullets)
-        gf.update_aliens(ai_settings ,aliens)
+        gf.update_bullets(ai_settings, screen, ship, aliens, bullets)
+        gf.update_aliens(ai_settings,stats, screen, ship, aliens, bullets)
         gf.update_screen(ai_settings, screen, ship, aliens, bullets)
 
 run_game()

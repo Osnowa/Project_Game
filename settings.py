@@ -7,9 +7,11 @@ class Settings():
         self.screen_width = 1200
         self.screen_height = 700
         self.background_image = pygame.image.load('images/fon.bmp')
+        # Настройки корабля
         self.ship_speed_factor = 0.8
+        self.ship_limit = 3
         #Параметры пули с скоростью, шириной, высотой, цветом
-        self.bullet_speed_factor = 1
+        self.bullet_speed_factor = 2
         self.bullet_width = 3
         self.bullet_height = 15
         self.bullet_color = 36, 255, 83
