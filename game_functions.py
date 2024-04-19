@@ -53,7 +53,7 @@ def check_keyup_events(event, ship):
         ship.moving_left = False
 
 
-def update_screen(ai_settings, screen, stats, ship, aliens, bullets, play_button):
+def update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets, play_button):
     """Обновляет изобрадение на экране и отоброжает новый"""
     #при каждом проходе цикла перерисовывается экран
     screen.blit(ai_settings.background_image, (0, 0))
@@ -62,13 +62,15 @@ def update_screen(ai_settings, screen, stats, ship, aliens, bullets, play_button
         bullet.draw_bullet()
     ship.blitme()
     aliens.draw(screen)
+    # вывод счета
+    sb.show_score()
     # Кнопка play отоброжается в том случае, если игра неактивна.
     if not stats.game_active:
         play_button.draw_button()
     # отображение последнего прорисованого экранаф
     pygame.display.flip()
 
-def update_bullets(ai_settings, screen, ship, aliens, bullets):
+def update_bullets(ai_settings, screen, stats, sb, ship, aliens, bullets):
     """Обновляет позиции пуль и уничтодает старые пули"""
     # Обновление позиции пуль.
     bullets.update()
@@ -76,12 +78,16 @@ def update_bullets(ai_settings, screen, ship, aliens, bullets):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
-    check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets)
+    check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens, bullets)
 
-def check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets):
+def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens, bullets):
     """Обработка коллизицй пуль с пришельцами"""
     # Удаление пуль и пришельцев, учавствующих в коллизиях.
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True) # Если в 1 аргументе передать False, пуля будет проходить дальше
+    if collisions:
+        for aliens in collisions.values():
+            stats.score += ai_settings.alien_points
+        sb.prep_score()
     if len(aliens) == 0:
         # Уничтожение пуль, повышение скорости и создание нового флота
         bullets.empty()
